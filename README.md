@@ -1,2 +1,3 @@
-# aadraw
-Antialiased graphic drawing library for Python, supporting Pygame and numpy arrays.
+# AA Draw
+
+Antialiased graphic drawing library for Python pygame.
