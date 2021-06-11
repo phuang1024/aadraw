@@ -51,12 +51,15 @@ def circle(surface: pygame.Surface, color: Tuple, loc: Tuple[float, float], radi
     :param color: RGB or RGBA color.
     :param loc: (x, y) location.
     :param radius: Radius of the circle.
-    :param border: Border thickness (px). Set to 0 for no border.
+    :param border: Border thickness (px). Set to 0 for no border. Extends inward.
     """
     cx, cy = loc
     w, h = surface.get_size()
     afac = color[3]/255 if len(color) == 4 else 1
     color = color[:3]
+
+    out_thres = radius
+    in_thres = 0 if border == 0 else (radius-border)
 
     x_min = max(0, int(cx-radius)-1)
     x_max = min(w, int(cx+radius)+2)
@@ -66,6 +69,7 @@ def circle(surface: pygame.Surface, color: Tuple, loc: Tuple[float, float], radi
     for x in range(x_min, x_max):
         for y in range(y_min, y_max):
             dist = ((x-cx)**2 + (y-cy)**2) ** 0.5
-            fac = bounds(radius-dist+1)
-            col = mix(surface.get_at((x, y)), color, fac*afac)
+            out_fac = bounds(out_thres-dist+1)
+            in_fac = bounds(dist-in_thres+1)
+            col = mix(surface.get_at((x, y)), color, out_fac*in_fac*afac)
             surface.set_at((x, y), col)
