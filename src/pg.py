@@ -23,6 +23,7 @@ Draws on Pygame surfaces.
 
 import pygame
 from typing import Tuple
+from .core import *
 pygame.init()
 
 

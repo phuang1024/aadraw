@@ -17,24 +17,16 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-"""
-Draws on numpy arrays.
-Opencv (cv2) uses numpy arrays for images,
-so you can use this to draw on cv2 images.
-"""
+from typing import Any, Tuple
 
-import numpy as np
-from typing import Tuple
-from .core import *
+__all__ = (
+)
 
-def set_at(img: np.ndarray, loc: Tuple[int, int], color: Tuple[int, int, int, int]) -> None:
-    img[loc[1]][loc[0]] = color[:img.shape[-1]]
 
-def get_at(img: np.ndarray, loc: Tuple[int, int]) -> Tuple[int, int, int, int]:
-    color = img[loc[1]][loc[0]]
-    if len(color) == 3:
-        return (color[0], color[1], color[2], 255)
-    elif len(color) == 4:
-        return tuple(color)
-    else:
-        raise ValueError(f"Expected color length of np.ndarray to be 3 or 4, but got {len(color)}")
+def set_at(img: Any, loc: Tuple[int, int], color: Tuple[int, int, int, int]) -> None:
+    # Implemented in respective image types
+    pass
+
+def get_at(img: Any, loc: Tuple[int, int]) -> Tuple[int, int, int, int]:
+    # Implemented in respective image types
+    pass
