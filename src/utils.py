@@ -17,7 +17,23 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-__version__ = "0.0.1"
+from typing import List, Tuple
 
-from .draw import *
-from . import utils
+
+def bounds(v: float, vmin: float = 0, vmax: float = 1) -> float:
+    """
+    Bound a number between a min and max.
+    :param v: Number
+    :param vmin: Minimum value
+    :param vmax: Maximum value
+    """
+    return min(max(v, vmin), vmax)
+
+def mix(c1: Tuple, c2: Tuple, fac: float) -> List[int]:
+    """
+    Mixes two RGB colors.
+    :param c1: Color 1
+    :param c2: Color 2
+    :param fac: Factor of the second color.
+    """
+    return [c1[i]*(1-fac) + c2[i]*fac for i in range(3)]
