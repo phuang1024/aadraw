@@ -28,6 +28,9 @@ SRC = os.path.join(os.path.dirname(PARENT), "src")
 with open(os.path.join(os.path.dirname(PARENT), "README.md"), "r") as file:
     long_description = file.read()
 
+with open(os.path.join(os.path.dirname(PARENT), "requirements.txt"), "r") as file:
+    requirements = file.read().strip().split("\n")
+
 if os.path.isdir(DEST):
     if input(f"Destination {DEST} exists. Remove permanently? (y/N) ").lower().strip() == "y":
         shutil.rmtree(DEST)
@@ -46,7 +49,7 @@ setuptools.setup(
     url="https://github.com/HuangPatrick16777216/aadraw",
     py_modules=["aadraw"],
     packages=setuptools.find_packages(),
-    install_requires=[],
+    install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
