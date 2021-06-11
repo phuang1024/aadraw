@@ -57,3 +57,21 @@ def circle(surface: pygame.Surface, color: Tuple, loc: Tuple[float, float], radi
             in_fac = bounds(dist-in_thres+1)
             col = mix(surface.get_at((x, y)), color, out_fac*in_fac*afac)
             surface.set_at((x, y), col)
+
+
+def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float, float],
+        border: float = 0, border_radius: float = 0, border_top_left_radius: float = ...,
+        border_top_right_radius: float = ..., border_bottom_left_radius: float = ...,
+        border_bottom_right_radius: float = ...) -> None:
+    """
+    Draws a rectangle.
+    :param surface: Pygame surface to draw on.
+    :param color: RGB or RGBA color.
+    :param dims: Dimensions (x, y, w, h).
+    :param border: Border thickness in pixels. Extends inward.
+    :param border_radius: Radius for border rounding.
+    :border_top_left_radius: Radius of corresponding corner.
+    :border_top_right_radius: Radius of corresponding corner.
+    :border_bottom_left_radius: Radius of corresponding corner.
+    :border_bottom_right_radius: Radius of corresponding corner.
+    """
