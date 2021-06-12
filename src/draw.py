@@ -83,10 +83,10 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
     :param dims: Dimensions (x, y, w, h).
     :param border: Border thickness in pixels. Extends inward.
     :param border_radius: Radius for border rounding.
-    :border_top_left_radius: Radius of corresponding corner.
-    :border_top_right_radius: Radius of corresponding corner.
-    :border_bottom_left_radius: Radius of corresponding corner.
-    :border_bottom_right_radius: Radius of corresponding corner.
+    :param border_top_left_radius: Radius of corresponding corner.
+    :param border_top_right_radius: Radius of corresponding corner.
+    :param border_bottom_left_radius: Radius of corresponding corner.
+    :param border_bottom_right_radius: Radius of corresponding corner.
     """
     width, height = surface.get_size()
     dx, dy, dw, dh = dims
