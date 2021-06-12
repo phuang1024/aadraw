@@ -108,6 +108,7 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
     y_max = min(width, int(dy+dh)+2)
     for x in range(x_min, x_max):
         for y in range(y_min, y_max):
+            # Calculate corner info
             corner_info = None
             if x < (cx := (dx+radii[0])) and y < (cy := (dy+radii[0])):          # Top left corner
                 corner_info = (0, cx, cy)
@@ -118,14 +119,16 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
             elif x < (cx := (dx+radii[3])) and y > (cy := (dy+dh-radii[3])):     # Bottom left corner
                 corner_info = (3, cx, cy)
 
+            # Calculate edge antialiasing
+            final_fac = bounds(x-dx+1) * bounds(dx+dw-x+1) * bounds(y-dy+1) * bounds(dy+dh-y+1)
+
             if corner_info is not None:
+                # If pixel is corner replace edge aa with corner aa
                 num, cx, cy = corner_info
                 dist = pythag(x-cx, y-cy)
                 out_fac = bounds(thresholds[num][0]-dist+1)
                 in_fac = bounds(dist-thresholds[num][1]+1)
-                col = mix(surface.get_at((x, y)), color, out_fac*in_fac*afac)
+                final_fac = out_fac*in_fac*afac
 
-            else:
-                col = (0, 0, 0)
-
+            col = mix(surface.get_at((x, y)), color, final_fac)
             surface.set_at((x, y), col)
