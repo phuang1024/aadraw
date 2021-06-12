@@ -37,7 +37,7 @@ def mix(c1: Tuple, c2: Tuple, fac: float) -> List[int]:
     :param c2: Color 2
     :param fac: Factor of the second color.
     """
-    return [c1[i]*(1-fac) + c2[i]*fac for i in range(3)]
+    return [int(c1[i]*(1-fac) + c2[i]*fac) for i in range(3)]
 
 
 def pythag(x, y):

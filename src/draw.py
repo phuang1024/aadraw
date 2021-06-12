@@ -88,9 +88,9 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
     :border_bottom_left_radius: Radius of corresponding corner.
     :border_bottom_right_radius: Radius of corresponding corner.
     """
-    # TODO border
     width, height = surface.get_size()
     dx, dy, dw, dh = dims
+    b = border
     radii = (
         border_radius if border_top_left_radius     is ... else border_top_left_radius,
         border_radius if border_top_right_radius    is ... else border_top_right_radius,
@@ -120,7 +120,12 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
                 corner_info = (3, cx, cy)
 
             # Calculate edge antialiasing
-            final_fac = bounds(x-dx+1) * bounds(dx+dw-x+1) * bounds(y-dy+1) * bounds(dy+dh-y+1)
+            out_fac = bounds(x-dx+1) * bounds(dx+dw-x+1) * bounds(y-dy+1) * bounds(dy+dh-y+1)
+            if border == 0:
+                in_fac = 1
+            else:
+                in_fac = bounds(dx+b-x+1) + bounds(x-(dx+dw-b)+1) + bounds(dy+b-y+1) + bounds(y-(dy+dh-b)+1)
+            final_fac = in_fac * out_fac
 
             if corner_info is not None:
                 # If pixel is corner replace edge aa with corner aa
