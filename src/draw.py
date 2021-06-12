@@ -94,8 +94,8 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
     radii = (
         border_radius if border_top_left_radius     is ... else border_top_left_radius,
         border_radius if border_top_right_radius    is ... else border_top_right_radius,
-        border_radius if border_bottom_left_radius  is ... else border_bottom_left_radius,
-        border_radius if border_bottom_right_radius is ... else border_bottom_right_radius,
+        border_radius if border_bottom_right_radius  is ... else border_bottom_right_radius,
+        border_radius if border_bottom_left_radius is ... else border_bottom_left_radius,
     )
     thresholds = [(r, (0 if border == 0 else r-border)) for r in radii]
 
