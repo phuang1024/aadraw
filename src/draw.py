@@ -94,8 +94,8 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
     radii = (
         border_radius if border_top_left_radius     is ... else border_top_left_radius,
         border_radius if border_top_right_radius    is ... else border_top_right_radius,
-        border_radius if border_bottom_right_radius  is ... else border_bottom_right_radius,
-        border_radius if border_bottom_left_radius is ... else border_bottom_left_radius,
+        border_radius if border_bottom_right_radius is ... else border_bottom_right_radius,
+        border_radius if border_bottom_left_radius  is ... else border_bottom_left_radius,
     )
     thresholds = [(r, (0 if border == 0 else r-border)) for r in radii]
 
@@ -110,14 +110,14 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
         for y in range(y_min, y_max):
             # Calculate corner info
             corner_info = None
-            if x < (cx := (dx+radii[0])) and y < (cy := (dy+radii[0])):          # Top left corner
-                corner_info = (0, cx, cy)
-            elif x > (cx := (dx+dw-radii[1])) and y < (cy := (dy+radii[1])):     # Top right corner
-                corner_info = (1, cx, cy)
-            elif x > (cx := (dx+dw-radii[2])) and y > (cy := (dy+dh-radii[2])):  # Bottom right corner
-                corner_info = (2, cx, cy)
-            elif x < (cx := (dx+radii[3])) and y > (cy := (dy+dh-radii[3])):     # Bottom left corner
-                corner_info = (3, cx, cy)
+            if x < dx+radii[0] and y < dy+radii[0]:          # Top left corner
+                corner_info = (0, dx+radii[0], dy+radii[0])
+            elif x > dx+dw-radii[1] and y < dy+radii[1]:     # Top right corner
+                corner_info = (1, dx+dw-radii[1], dy+radii[1])
+            elif x > dx+dw-radii[2] and y > dy+dh-radii[2]:  # Bottom right corner
+                corner_info = (2, dx+dw-radii[2], dy+dh-radii[2])
+            elif x < dx+radii[3] and y > dy+dh-radii[3]:     # Bottom left corner
+                corner_info = (3, dx+radii[3], dy+dh-radii[3])
 
             # Calculate edge antialiasing
             out_fac = bounds(x-dx+1) * bounds(dx+dw-x+1) * bounds(y-dy+1) * bounds(dy+dh-y+1)
