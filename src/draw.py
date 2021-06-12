@@ -108,32 +108,21 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
     y_max = min(width, int(dy+dh)+2)
     for x in range(x_min, x_max):
         for y in range(y_min, y_max):
-            corner = False
-            corner_center = (0, 0)
-            corner_num = 0
-
+            corner_info = None
             if x < (cx := (dx+radii[0])) and y < (cy := (dy+radii[0])):          # Top left corner
-                corner_num = 0
-                corner = True
-                corner_center = (cx, cy)
+                corner_info = (0, cx, cy)
             elif x > (cx := (dx+dw-radii[1])) and y < (cy := (dy+radii[1])):     # Top right corner
-                corner_num = 1
-                corner = True
-                corner_center = (cx, cy)
+                corner_info = (1, cx, cy)
             elif x > (cx := (dx+dw-radii[2])) and y > (cy := (dy+dh-radii[2])):  # Bottom right corner
-                corner_num = 2
-                corner = True
-                corner_center = (cx, cy)
+                corner_info = (2, cx, cy)
             elif x < (cx := (dx+radii[3])) and y > (cy := (dy+dh-radii[3])):     # Bottom left corner
-                corner_num = 3
-                corner = True
-                corner_center = (cx, cy)
+                corner_info = (3, cx, cy)
 
-            if corner:
-                cx, cy = corner_center
+            if corner_info is not None:
+                num, cx, cy = corner_info
                 dist = pythag(x-cx, y-cy)
-                out_fac = bounds(thresholds[corner_num][0]-dist+1)
-                in_fac = bounds(dist-thresholds[corner_num][1]+1)
+                out_fac = bounds(thresholds[num][0]-dist+1)
+                in_fac = bounds(dist-thresholds[num][1]+1)
                 col = mix(surface.get_at((x, y)), color, out_fac*in_fac*afac)
 
             else:
