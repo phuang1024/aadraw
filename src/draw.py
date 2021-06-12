@@ -17,6 +17,19 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+Antialiased Pygame drawing library.
+"""
+
+"""
+Variable names used:
+- x, y: Current x or y of pixel-by-pixel drawing.
+- w, h: Width and height of shape dimensions
+- width, height: Dimensions of surface
+- cx, cy: Center X, center Y
+- dx, dy: Dimension x, dimension y of shape
+"""
+
 import pygame
 from typing import Tuple
 from .utils import *
@@ -24,6 +37,7 @@ pygame.init()
 
 __all__ = (
     "circle",
+    "rect",
 )
 
 
@@ -38,21 +52,20 @@ def circle(surface: pygame.Surface, color: Tuple, loc: Tuple[float, float], radi
     :param border: Border thickness (px). Set to 0 for no border. Extends inward.
     """
     cx, cy = loc
-    w, h = surface.get_size()
+    width, height = surface.get_size()
+
     afac = color[3]/255 if len(color) == 4 else 1
     color = color[:3]
-
     out_thres = radius
     in_thres = 0 if border == 0 else (radius-border)
 
     x_min = max(0, int(cx-radius)-1)
-    x_max = min(w, int(cx+radius)+2)
+    x_max = min(width, int(cx+radius)+2)
     y_min = max(0, int(cy-radius)-1)
-    y_max = min(h, int(cy+radius)+2)
-
+    y_max = min(height, int(cy+radius)+2)
     for x in range(x_min, x_max):
         for y in range(y_min, y_max):
-            dist = ((x-cx)**2 + (y-cy)**2) ** 0.5
+            dist = pythag(x-cx, y-cy)
             out_fac = bounds(out_thres-dist+1)
             in_fac = bounds(dist-in_thres+1)
             col = mix(surface.get_at((x, y)), color, out_fac*in_fac*afac)
@@ -75,3 +88,55 @@ def rect(surface: pygame.Surface, color: Tuple, dims: Tuple[float, float, float,
     :border_bottom_left_radius: Radius of corresponding corner.
     :border_bottom_right_radius: Radius of corresponding corner.
     """
+    # TODO border
+    width, height = surface.get_size()
+    dx, dy, dw, dh = dims
+    radii = (
+        border_radius if border_top_left_radius     is ... else border_top_left_radius,
+        border_radius if border_top_right_radius    is ... else border_top_right_radius,
+        border_radius if border_bottom_left_radius  is ... else border_bottom_left_radius,
+        border_radius if border_bottom_right_radius is ... else border_bottom_right_radius,
+    )
+    thresholds = [(r, (0 if border == 0 else r-border)) for r in radii]
+
+    afac = color[3]/255 if len(color) == 4 else 1
+    color = color[:3]
+
+    x_min = max(0,     int(dx)   -1)
+    x_max = min(width, int(dx+dw)+2)
+    y_min = max(0,     int(dy)   -1)
+    y_max = min(width, int(dy+dh)+2)
+    for x in range(x_min, x_max):
+        for y in range(y_min, y_max):
+            corner = False
+            corner_center = (0, 0)
+            corner_num = 0
+
+            if x < (cx := (dx+radii[0])) and y < (cy := (dy+radii[0])):          # Top left corner
+                corner_num = 0
+                corner = True
+                corner_center = (cx, cy)
+            elif x > (cx := (dx+dw-radii[1])) and y < (cy := (dy+radii[1])):     # Top right corner
+                corner_num = 1
+                corner = True
+                corner_center = (cx, cy)
+            elif x > (cx := (dx+dw-radii[2])) and y > (cy := (dy+dh-radii[2])):  # Bottom right corner
+                corner_num = 2
+                corner = True
+                corner_center = (cx, cy)
+            elif x < (cx := (dx+radii[3])) and y > (cy := (dy+dh-radii[3])):     # Bottom left corner
+                corner_num = 3
+                corner = True
+                corner_center = (cx, cy)
+
+            if corner:
+                cx, cy = corner_center
+                dist = pythag(x-cx, y-cy)
+                out_fac = bounds(thresholds[corner_num][0]-dist+1)
+                in_fac = bounds(dist-thresholds[corner_num][1]+1)
+                col = mix(surface.get_at((x, y)), color, out_fac*in_fac*afac)
+
+            else:
+                col = (0, 0, 0)
+
+            surface.set_at((x, y), col)
